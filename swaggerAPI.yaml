@@ -1,0 +1,463 @@
+---
+openapi: "3.0.1"
+info:
+  title: "E commerce"
+  description: "API "
+  version: "001"
+  contact:
+   email: doaawasil.abdulrahman@integrify.io
+servers:
+ - url: "http://locallgost300"
+ 
+tags:
+  - name: Products
+    description: every thing about products
+  - name: Users 
+    description: every thing about users
+  - name: Categories
+    description: every thing about categories
+  - name: Orders 
+    description: every thing about orders
+
+components:
+  schemas:
+    Products:
+      type: object
+      required:
+        - title
+        - price
+        - category
+      properties:
+        id:
+          type: string
+          description: in the backend
+        title:
+          type: string
+          description: the name of the product
+        price:
+          type: number
+          description: the price of the product
+        category:
+          type: string
+          description: category of the product
+        image:
+          type: string
+          description: the image of the product
+        description:
+          type: string
+          description: description of the product
+        rating:
+          type: object
+          properties:
+            rate: 
+              type: number
+            count:
+              type: number
+      example:
+       id: 1
+       title: laptop
+       price: 1000
+       category: computer
+       description: newest version of the laptop
+       rating:
+        rate: 2.8
+        count: 399
+    Categories:
+      type: object
+      properties:
+        id: 
+          type: number
+        name:
+          type: string
+    Users:
+      type: object 
+      properties:
+        id: 
+          type: number
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    Orders:
+      type: object
+      properties:
+        id: 
+          type: number
+        productId:
+          type: number    
+        userId:
+          type: number
+        purchasedAt:
+          type: string
+paths:
+  /products:
+   get:
+     tags: 
+       - products
+     summary: get  all products
+     responses: 
+      '200':
+        description: all the products are here
+        content:
+         application/json:
+           schema:
+             type: array
+             items: 
+               $ref: '#/components/schemas/Products'
+           
+      '500':
+        description: server error
+        
+   post:
+      tags: 
+        - Products 
+      summary: creact new product
+      description: creact new product
+      requestBody: 
+       content:
+         application/json:
+           schema:
+               $ref: '#/components/schemas/Products'
+      
+      responses:  
+       '201':
+          description: a product is returned
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/Products'
+       '500':
+          description: server error    
+               
+  /products/{productId}:
+   get:
+     tags: 
+       - Products
+     summary: the single product
+     parameters:
+      - in : path
+        name: productId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the product is here
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Products'
+           
+      '500':
+        description: server error
+  
+   delete:
+     tags: 
+       - Products
+     summary: delete a single product
+     parameters:
+      - in : path
+        name: productId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the product is here
+           
+      '500':
+        description: server error
+    
+   put:
+     tags: 
+       - Products
+     summary: update product
+     description: update
+     requestBody:
+      content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Products'
+     parameters:
+      - in : path
+        name: productId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the product is updated
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Products'
+           
+      '500':
+        description: server error
+        
+  /Product/search:
+    get:
+      summary: search product
+      parameters:
+      - in : query
+        name: search
+        required: true
+        schema:
+          type: string
+      responses: 
+       '200':
+         description:  the product you are searching for is here
+         content:
+           application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Products'
+           
+       '500':
+          description: server error
+        
+          
+  /Categories:
+   get:
+     tags: 
+       - Categories
+     summary: get  all categories
+     responses: 
+      '200':
+        description: all the categories are here
+        content:
+         application/json:
+           schema:
+             type: array
+             items: 
+               $ref: '#/components/schemas/Categories'
+           
+      '500':
+        description: server error
+        
+   post:
+      tags: 
+        - Categories 
+      summary: creact a new category
+      description: creact a new category
+      requestBody: 
+       content:
+         application/json:
+           schema:
+               $ref: '#/components/schemas/Categories'
+      
+      responses:  
+       '201':
+          description: a new category is returned
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/Categories'
+       '500':
+          description: server error            
+          
+  /category/{categoryId}:
+   get:
+     tags: 
+       - Categories
+     summary: the single category
+     parameters:
+      - in : path
+        name: categoryId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the category is here
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Categories'
+           
+      '500':
+        description: server error
+  
+   delete:
+     tags: 
+       - Categories
+     summary: delete a single category
+     parameters:
+      - in : path
+        name: categoryId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the category is here
+           
+      '500':
+        description: server error
+    
+   put:
+     tags: 
+       - Categories
+     summary: update category
+     description: update
+     requestBody:
+      content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Categories'
+     parameters:
+      - in : path
+        name: categoryId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the category is updated
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Categories'
+           
+      '500':
+        description: server error  
+  /Users:
+   get:
+     tags: 
+       - Users
+     summary: get  all Users
+     responses: 
+      '200':
+        description: all the Users are here
+        content:
+         application/json:
+           schema:
+             type: array
+             items: 
+               $ref: '#/components/schemas/Users'
+           
+      '500':
+        description: server error
+        
+   post:
+      tags: 
+        - Users 
+      summary: creact a new user
+      description: creact a new user
+      requestBody: 
+       content:
+         application/json:
+           schema:
+               $ref: '#/components/schemas/Users'
+      
+      responses:  
+       '201':
+          description: a new user is returned
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/Users'
+       '500':
+          description: server error            
+          
+  /Users/{userId}:
+   get:
+     tags: 
+       - Users
+     summary: all the Users
+     parameters:
+      - in : path
+        name: userId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the user is here
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Users'
+           
+      '500':
+        description: server error
+  
+   delete:
+     tags: 
+       - Users
+     summary: delete a single user
+     parameters:
+      - in : path
+        name: userId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the user is here
+           
+      '500':
+        description: server error
+    
+   put:
+     tags: 
+       - Users
+     summary: update user
+     description: update
+     requestBody:
+      content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Users'
+     parameters:
+      - in : path
+        name: userId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      '200':
+        description:  the User is updated
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Users'
+           
+      '500':
+        description: server error 
+        
+  /Orders:
+   get:
+     tags: 
+       - Orders
+     summary: get  all Orders
+     responses: 
+      '200':
+        description: all the Orders are here
+        content:
+         application/json:
+           schema:
+             type: array
+             items: 
+               $ref: '#/components/schemas/Orders'
+           
+      '500':
+        description: server error
+        
+      
