@@ -522,7 +522,7 @@ paths:
           content:
             application/json:
              schema:
-               $ref: '#/components/schemas/order'
+               $ref: '#/components/schemas/Order'
        500:
           description: server error            
           
@@ -536,8 +536,7 @@ paths:
         name: orderId
         required: true
         schema:
-          type: string
-          
+         type: string
      responses: 
       200:
         description:  find the order 
@@ -555,11 +554,10 @@ paths:
      summary: delete a single Order
      parameters:
       - in : path
-        name: OrderId
+        name: orderId
         required: true
         schema:
           type: string
-          
      responses: 
       200:
         description:  delete the order
