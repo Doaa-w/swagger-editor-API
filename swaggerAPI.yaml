@@ -220,6 +220,8 @@ paths:
         
   /product/search:
     get:
+      tags: 
+       - Products
       summary: search product
       parameters:
       - in : query
