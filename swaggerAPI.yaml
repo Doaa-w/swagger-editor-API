@@ -21,7 +21,7 @@ tags:
 
 components:
   schemas:
-    Products:
+    Product:
       type: object
       required:
         - title
@@ -38,8 +38,7 @@ components:
           type: number
           description: the price of the product
         category:
-          type: string
-          description: category of the product
+           $ref: '#/components/schemas/Category'
         image:
           type: string
           description: the image of the product
@@ -62,56 +61,71 @@ components:
        rating:
         rate: 2.8
         count: 399
-    Categories:
+    Category:
       type: object
       properties:
         id: 
           type: number
         name:
           type: string
-    Users:
+    User:
       type: object 
       properties:
         id: 
           type: number
-        firstname:
-          type: string
-        lastname:
+        name:
           type: string
         email:
           type: string
         password:
           type: string
-        role:
-          type: string
-    Orders:
+    Order:
       type: object
       properties:
         id: 
-          type: number
-        productId:
-          type: number    
-        userId:
-          type: number
-        purchasedAt:
           type: string
+        product:
+          type: array 
+          items:
+            $ref: '#/components/schemas/Product'  
+        totalPrice:
+          type: number
 paths:
   /products:
    get:
      tags: 
        - products
      summary: get  all products
+     parameters: 
+      - in: query
+        name: page
+        schema: 
+          type: number
+        required: false
+      - in: query
+        name: limit
+        schema: 
+          type: number
+        required: false
+      - in: query
+        name: sortBy
+        schema: 
+          type: string
+          enum: 
+            - 'asc'
+            - 'desc'
+        required: false  
      responses: 
-      '200':
+      200:
         description: all the products are here
         content:
          application/json:
            schema:
              type: array
              items: 
-               $ref: '#/components/schemas/Products'
+               $ref: '#/components/schemas/Product'
            
-      '500':
+      500:
         description: server error
         
    post:
@@ -123,16 +137,16 @@ paths:
        content:
          application/json:
            schema:
-               $ref: '#/components/schemas/Products'
+               $ref: '#/components/schemas/Product'
       
       responses:  
-       '201':
-          description: a product is returned
+       201:
+          description: a product is created
           content:
             application/json:
              schema:
-               $ref: '#/components/schemas/Products'
-       '500':
+               $ref: '#/components/schemas/Product'
+       500:
           description: server error    
                
   /products/{productId}:
@@ -148,14 +162,14 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the product is here
         content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Products'
+                $ref: '#/components/schemas/Product'
            
-      '500':
+      500:
         description: server error
   
    delete:
@@ -170,10 +184,10 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the product is here
            
-      '500':
+      500:
         description: server error
     
    put:
@@ -185,7 +199,7 @@ paths:
       content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Products'
+                $ref: '#/components/schemas/Product'
      parameters:
       - in : path
         name: productId
@@ -194,17 +208,17 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the product is updated
         content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Products'
+                $ref: '#/components/schemas/Product'
            
-      '500':
+      500:
         description: server error
         
-  /Product/search:
+  /product/search:
     get:
       summary: search product
       parameters:
@@ -214,35 +228,35 @@ paths:
         schema:
           type: string
       responses: 
-       '200':
+       200:
          description:  the product you are searching for is here
          content:
            application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Products'
+                $ref: '#/components/schemas/Product'
            
-       '500':
+       500:
           description: server error
         
           
-  /Categories:
+  /categories:
    get:
      tags: 
        - Categories
      summary: get  all categories
      responses: 
-      '200':
+      200:
         description: all the categories are here
         content:
          application/json:
            schema:
              type: array
              items: 
-               $ref: '#/components/schemas/Categories'
+               $ref: '#/components/schemas/Category'
            
-      '500':
+      500:
         description: server error
         
    post:
@@ -254,19 +268,19 @@ paths:
        content:
          application/json:
            schema:
-               $ref: '#/components/schemas/Categories'
+               $ref: '#/components/schemas/Category'
       
       responses:  
-       '201':
-          description: a new category is returned
+       201:
+          description: a new category is created
           content:
             application/json:
              schema:
-               $ref: '#/components/schemas/Categories'
-       '500':
+               $ref: '#/components/schemas/Category'
+       500:
           description: server error            
           
-  /category/{categoryId}:
+  /categories/{categoryId}:
    get:
      tags: 
        - Categories
@@ -279,14 +293,14 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the category is here
         content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Categories'
+                $ref: '#/components/schemas/Category'
            
-      '500':
+      500:
         description: server error
   
    delete:
@@ -301,10 +315,10 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the category is here
            
-      '500':
+      500:
         description: server error
     
    put:
@@ -316,7 +330,7 @@ paths:
       content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Categories'
+                $ref: '#/components/schemas/Category'
      parameters:
       - in : path
         name: categoryId
@@ -325,31 +339,31 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the category is updated
         content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Categories'
+                $ref: '#/components/schemas/Category'
            
-      '500':
+      500:
         description: server error  
-  /Users:
+  /users:
    get:
      tags: 
        - Users
      summary: get  all Users
      responses: 
-      '200':
+      200:
         description: all the Users are here
         content:
          application/json:
            schema:
              type: array
              items: 
-               $ref: '#/components/schemas/Users'
+               $ref: '#/components/schemas/User'
            
-      '500':
+      500:
         description: server error
         
    post:
@@ -361,19 +375,19 @@ paths:
        content:
          application/json:
            schema:
-               $ref: '#/components/schemas/Users'
+               $ref: '#/components/schemas/User'
       
       responses:  
-       '201':
+       201:
           description: a new user is returned
           content:
             application/json:
              schema:
-               $ref: '#/components/schemas/Users'
-       '500':
+               $ref: '#/components/schemas/User'
+       500:
           description: server error            
           
-  /Users/{userId}:
+  /users/{userId}:
    get:
      tags: 
        - Users
@@ -386,14 +400,14 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the user is here
         content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Users'
+                $ref: '#/components/schemas/User'
            
-      '500':
+      500:
         description: server error
   
    delete:
@@ -408,10 +422,10 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the user is here
            
-      '500':
+      500:
         description: server error
     
    put:
@@ -423,7 +437,7 @@ paths:
       content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Users'
+                $ref: '#/components/schemas/User'
      parameters:
       - in : path
         name: userId
@@ -432,32 +446,154 @@ paths:
           type: string
           
      responses: 
-      '200':
+      200:
         description:  the User is updated
         content:
          application/json:
            schema:
-                $ref: '#/components/schemas/Users'
+                $ref: '#/components/schemas/User'
            
-      '500':
+      500:
         description: server error 
+  /users/login:
+    post: 
+     tags:
+       - Users
+     summary: login
+     requestBody:
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+                email:
+                  type: string
+                password:
+                  type: string
+     responses:
+       200:
+        description:  you are logged in
+       401:
+         description: unauthorized
+       500:
+        description: server error 
+  /users/logout:
+    post: 
+      tags:
+        - Users
+      summary: logout 
+      responses:
+        200: 
+         description: you logged out
+        500: 
+         description: server error 
         
-  /Orders:
+  /orders:
    get:
      tags: 
        - Orders
      summary: get  all Orders
      responses: 
-      '200':
+      200:
         description: all the Orders are here
         content:
          application/json:
            schema:
              type: array
              items: 
-               $ref: '#/components/schemas/Orders'
+               $ref: '#/components/schemas/Order'
            
-      '500':
+      500:
         description: server error
-        
+   post:
+      tags: 
+        - Orders 
+      summary: creact a new order
+      description: creact a new order
+      requestBody: 
+       content:
+         application/json:
+           schema:
+               $ref: '#/components/schemas/Order'
+      
+      responses:  
+       201:
+          description: a new order is created
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/order'
+       500:
+          description: server error            
+          
+  /orders/{orderId}:
+   get:
+     tags: 
+       - Orders
+     summary: an order
+     parameters:
+      - in : path
+        name: orderId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      200:
+        description:  find the order 
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Order'
+           
+      500:
+        description: server error
+  
+   delete:
+     tags: 
+       - Orders
+     summary: delete a single Order
+     parameters:
+      - in : path
+        name: OrderId
+        required: true
+        schema:
+          type: string
+          
+     responses: 
+      200:
+        description:  delete the order
+           
+      500:
+        description: server error
+    
+   put:
+     tags: 
+       - Orders
+     summary: update order
+     description: update
+     parameters:
+      - in : path
+        name: orderId
+        required: true
+        schema:
+          type: string
+     requestBody:
+      content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Order'
+     
+          
+     responses: 
+      200:
+        description:  the User is updated
+        content:
+         application/json:
+           schema:
+                $ref: '#/components/schemas/Order'
+      400:
+        description: order not found
+      500:
+        description: server error 
       
