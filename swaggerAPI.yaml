@@ -94,7 +94,7 @@ paths:
   /products:
    get:
      tags: 
-       - products
+       - Products
      summary: get  all products
      parameters: 
       - in: query
